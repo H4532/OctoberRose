@@ -1,20 +1,17 @@
 # October Rose — Holiday Inn Jeddah Corniche
 
-Standalone registration app replacing Base44 dependency. **No Base44 registrations are automatically imported**. Existing Base44 site is not changed.
+Standalone Next.js event registration system backed by **Neon PostgreSQL**. No Base44 or Supabase dependencies. The original published Base44 app and attendee data are untouched and not automatically imported.
 
-## Pages
-- `/`: public registration form, pink October Rose branding, hotel wordmark, Jeddah default, +966 telephone, in-person RSVP.
-- `/admin`: PIN-protected registration dashboard with search, expected guest count and CSV export.
+## Routes
+- `/` public guest form with logo placeholder/wordmark, Jeddah default and +966 phone.
+- `/qr` shareable QR display targeting the deployed guest form.
+- `/admin` organizer response dashboard, search and CSV export.
 
-## Setup
-1. Create a **new dedicated Supabase project** and run `schema.sql` in its SQL editor.
-2. Add `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PIN`, and random `SESSION_SECRET` in Vercel Environment Variables for production (never prefix these with NEXT_PUBLIC_). Keep secrets out of GitHub.
-3. Deploy this repository as a Next.js project using Vercel. Verify test registration is saved, public visitors cannot load `/api/admin/registrations`, and organizer login works.
-4. Share only `/` with guests, and give `/admin` to organizers. Avoid distributing the PIN in the invitation.
+## Installation
+1. Create a dedicated Neon database; run `schema.sql` against that database. PostgreSQL syntax is supported.
+2. Configure `DATABASE_URL` (Neon pooled connection URL), `ADMIN_PIN` (strong secret), and `SESSION_SECRET` (at least 32 random bytes) as **server-only** Vercel environment variables.
+3. Deploy from this GitHub repository to Vercel and perform a registration submission test. The app refuses to store registrations until `DATABASE_URL` is set.
+4. Share `/` with guests and `/admin` only with organizers. Never place secrets in a Git commit.
 
-### Security notes
-- No public Supabase table permissions; reads and writes are server-side.
-- The four-digit PIN 1017 previously requested is weak: use a longer admin secret and additional platform-level restrictions for real attendee contact details.
-- This simple standalone implementation currently lacks durable server-side rate limiting for PIN attempts; before public launch, use Vercel WAF/rate limiting, or upgrade to authenticated administrator accounts.
-- The included wordmark is a vector approximation; replace with an approved hotel logo file if available.
-- Registration is only functional after database and environment configuration; no form submissions should be considered saved until verified.
+## Important security notes
+The shared PIN login is not protected against brute-force attempts with durable server-side rate limiting. **Do not use it to collect production personal data until rate limiting or proper administrator authentication is implemented.** A four-digit PIN (including 1017) is insufficient for an internet-facing contact-data dashboard. Data are stored only by the server; database credentials are never sent to the browser. The included wordmark is a vector approximation; replace with an approved hotel logo asset. Public registration should be covered by appropriate consent and retention terms.
