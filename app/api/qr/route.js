@@ -1,0 +1,1 @@
+import QRCode from 'qrcode';export async function GET(req){const origin=new URL(req.url).origin;const svg=await QRCode.toString(origin+'/',{type:'svg',margin:2,width:320,color:{dark:'#993658',light:'#ffffff'}});return new Response(svg,{headers:{'Content-Type':'image/svg+xml','Cache-Control':'no-store'}})}
