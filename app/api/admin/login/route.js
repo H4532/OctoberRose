@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {validPin,makeToken,sessionAge} from '../../../../lib/admin';
+export async function POST(req){let pin='';try{({pin}=await req.json())}catch{};if(!validPin(pin))return NextResponse.json({error:'Invalid PIN'},{status:401});const out=NextResponse.json({ok:true});out.cookies.set('octrose_admin',makeToken(),{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'strict',path:'/',maxAge:sessionAge});return out}
