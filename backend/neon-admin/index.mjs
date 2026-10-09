@@ -1,5 +1,5 @@
 const origin='https://h4532.github.io';
-const headers={'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'POST,OPTIONS','Access-Control-Allow-Headers':'Content-Type','Content-Type':'application/json','Cache-Control':'no-store'};
+const headers={'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'POST,OPTIONS','Access-Control-Allow-Headers':'Content-Type,X-Admin-Key','Content-Type':'application/json','Cache-Control':'no-store'};
 const respond=(value,status=200)=>new Response(JSON.stringify(value),{status,headers});
 export default {async fetch(request){
 if(request.method==='OPTIONS')return new Response(null,{status:204,headers});
